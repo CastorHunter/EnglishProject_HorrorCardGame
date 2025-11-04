@@ -1,21 +1,18 @@
+using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Card : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public int health, attack, speed;
+    public List<string> weaknessesList, strenghList;
+    public virtual int Attack()
     {
-        
+        return attack;
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    public virtual void TakeDamage(int damage)
     {
-        
-    }
-
-    public virtual void Attack()
-    {
-        
+        health -= damage;
     }
 }
