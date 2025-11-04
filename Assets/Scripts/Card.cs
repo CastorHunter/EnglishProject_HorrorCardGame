@@ -11,8 +11,9 @@ public class Card : MonoBehaviour
         return attack;
     }
     
-    public virtual void TakeDamage(int damage)
+    public virtual int TakeDamage(int targetHealth, int damage)
     {
-        health -= damage;
+        targetHealth -= damage;
+        return health;
     }
 }

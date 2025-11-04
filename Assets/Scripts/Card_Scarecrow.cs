@@ -10,9 +10,10 @@ public class Card_Scarecrow : Card
         return ScaredCrows();
     }
 
-    public override void TakeDamage(int damages)
+    public override int TakeDamage(int health, int damages)
     {
         health -= MasterOfCrows(damages);
+        return health;
     }
 
     private int MasterOfCrows(int damages)
