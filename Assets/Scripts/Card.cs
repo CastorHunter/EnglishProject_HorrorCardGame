@@ -7,6 +7,8 @@ public class Card : MonoBehaviour
     public string cardName;
     public int health, attack, speed;
     public List<string> weaknessesList, strengthList;
+    public Sprite cardImage;
+    
     public virtual int Attack()
     {
         return attack;

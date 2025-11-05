@@ -16,6 +16,8 @@ public class GameManagerBehavior : MonoBehaviour
         _currentEnemyHealth = _enemyCard.health;
         print(_currentEnemyHealth);
         StartCoroutine(AutoFight());
+        _playerCard.GetComponent<SpriteRenderer>().sprite = _playerCard.cardImage;
+        _enemyCard.GetComponent<SpriteRenderer>().sprite = _enemyCard.cardImage;
     }
     
     private void PlayTurn()

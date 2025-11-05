@@ -32,7 +32,17 @@ public class Card_Player : Card
 
     public void Fear(int fearLevel)
     {
-        
+        attack -= fearLevel*5;
+        if (attack < 0)
+        {
+            attack = 0;
+        }
+        speed -= fearLevel*5;
+        if (speed < 0)
+        {
+            speed = 0;
+        }
+        SetState(State.Feared);
     }
 
     public void ClearState()
