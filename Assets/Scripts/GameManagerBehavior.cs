@@ -14,20 +14,21 @@ public class GameManagerBehavior : MonoBehaviour
 
     void Start()
     {
-        //Set player health and speed
+        //Set player health, speed and image
         _currentPlayerHealth = _playerCard.health;
         _currentPlayerStamina = _playerCard.speed;
-        //Set enemy health and speed
+        _playerCard.GetComponent<SpriteRenderer>().sprite = _playerCard.cardImage;
+        //Set enemy health, speed and image
         _currentEnemyHealth = _enemyCard.health;
         _currentEnemyStamina = _enemyCard.speed;
+        _enemyCard.GetComponent<SpriteRenderer>().sprite = _enemyCard.cardImage;
         //Start the autofight
         StartCoroutine(AutoFight());
-        _playerCard.GetComponent<SpriteRenderer>().sprite = _playerCard.cardImage;
-        _enemyCard.GetComponent<SpriteRenderer>().sprite = _enemyCard.cardImage;
     }
     
     private void PlayTurn()
     {
+        StartCoroutine(AttackAnimation());
         switch (_isPlayerTurn)
         {
             case true:
@@ -91,6 +92,27 @@ public class GameManagerBehavior : MonoBehaviour
         else
         {
             StartCoroutine(AutoFight());
+        }
+    }
+
+    private IEnumerator AttackAnimation()
+    {
+        switch (_isPlayerTurn)
+        {
+            case true:
+            {
+                _playerCard.gameObject.transform.position = new Vector3(_playerCard.gameObject.transform.position.x+5, _playerCard.gameObject.transform.position.y, _playerCard.gameObject.transform.position.z);
+                yield return new WaitForSeconds(0.2f);
+                _playerCard.gameObject.transform.position = new Vector3(_playerCard.gameObject.transform.position.x-5, _playerCard.gameObject.transform.position.y, _playerCard.gameObject.transform.position.z);
+                break;
+            }
+            case false:
+            {
+                _enemyCard.gameObject.transform.position = new Vector3(_enemyCard.gameObject.transform.position.x-5, _enemyCard.gameObject.transform.position.y, _enemyCard.gameObject.transform.position.z);
+                yield return new WaitForSeconds(0.2f);
+                _enemyCard.gameObject.transform.position = new Vector3(_enemyCard.gameObject.transform.position.x+5, _enemyCard.gameObject.transform.position.y, _enemyCard.gameObject.transform.position.z);
+                break;
+            }
         }
     }
 }
