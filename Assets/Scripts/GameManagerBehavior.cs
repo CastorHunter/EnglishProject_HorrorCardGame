@@ -10,7 +10,7 @@ public class GameManagerBehavior : MonoBehaviour
     private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina;
     private string _winner;
     [SerializeField]
-    private TextMeshProUGUI _playerHealthText, _enemyHealthText;
+    private TextMeshProUGUI _playerHealthText, _enemyHealthText, _fightResultText;
 
     void Start()
     {
@@ -22,6 +22,8 @@ public class GameManagerBehavior : MonoBehaviour
         _currentEnemyHealth = _enemyCard.health;
         _currentEnemyStamina = _enemyCard.speed;
         _enemyCard.GetComponent<SpriteRenderer>().sprite = _enemyCard.cardImage;
+        //Hide the result text pannel
+        _fightResultText.enabled = false;
         //Start the autofight
         StartCoroutine(AutoFight());
     }
@@ -70,6 +72,7 @@ public class GameManagerBehavior : MonoBehaviour
 
         if (_currentPlayerHealth <= 0)
         {
+            someoneWon = true;
             _winner = _enemyCard.name;
         }
         return someoneWon;
@@ -87,7 +90,8 @@ public class GameManagerBehavior : MonoBehaviour
         PlayTurn();
         if (CheckIfSomeoneWon())
         {
-            print(_winner + " won");
+            _fightResultText.text = (_winner + " won");
+            _fightResultText.enabled = true;
         }
         else
         {

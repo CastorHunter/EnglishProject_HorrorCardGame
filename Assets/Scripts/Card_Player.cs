@@ -1,9 +1,17 @@
 using UnityEngine;
+using TMPro;
 
 public class Card_Player : Card
 {
     private State _playerState;
     private int _baseSpeed, _baseAttack;
+    [SerializeField]
+    private TextMeshProUGUI _playerStateText;
+
+    private void Start()
+    {
+        SetState(State.Normal);
+    }
     public override int Attack()
     {
         if (_playerState == State.Surprised)
@@ -23,6 +31,7 @@ public class Card_Player : Card
     public void SetState(State newState)
     {
         _playerState = newState;
+        _playerStateText.text = ("State : " + _playerState.ToString());
     }
 
     public State GetState()
