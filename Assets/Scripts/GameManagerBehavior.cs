@@ -1,13 +1,16 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class GameManagerBehavior : MonoBehaviour
 {
     private bool _isPlayerTurn = false;
     [SerializeField]
     private Card _playerCard, _enemyCard;
-    private int _currentPlayerHealth, _currentEnemyHealth;
+    private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina;
     private string _winner;
+    [SerializeField]
+    private TextMeshProUGUI _playerHealthText, _enemyHealthText;
 
     void Start()
     {
@@ -27,13 +30,13 @@ public class GameManagerBehavior : MonoBehaviour
             case true:
             {
                 _currentEnemyHealth=_enemyCard.TakeDamage(_currentEnemyHealth, _playerCard.Attack());
-                print(_currentEnemyHealth);
+                ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
                 break;
             }
             case false:
             {
                 _currentPlayerHealth=_playerCard.TakeDamage(_currentPlayerHealth, _enemyCard.Attack());
-                print(_currentPlayerHealth);
+                ChangeHealthText(_playerHealthText, _currentPlayerHealth);
                 break;
             }
         }
@@ -52,6 +55,11 @@ public class GameManagerBehavior : MonoBehaviour
             _winner = _enemyCard.name;
         }
         return someoneWon;
+    }
+
+    private void ChangeHealthText(TextMeshProUGUI textToChange, int newHealth)
+    {
+        textToChange.text = ("Health : " + newHealth.ToString());
     }
     
     private IEnumerator AutoFight()

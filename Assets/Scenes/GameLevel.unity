@@ -918,6 +918,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerCard: {fileID: 195495695}
   _enemyCard: {fileID: 638483868}
+  _playerHealthText: {fileID: 1750283524}
+  _enemyHealthText: {fileID: 737281704}
 --- !u!1 &1750283522
 GameObject:
   m_ObjectHideFlags: 0
