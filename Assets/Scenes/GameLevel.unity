@@ -129,8 +129,9 @@ GameObject:
   m_Component:
   - component: {fileID: 195495694}
   - component: {fileID: 195495693}
+  - component: {fileID: 195495695}
   m_Layer: 0
-  m_Name: MainCharacter
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -206,6 +207,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &195495695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195495692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f68452959c559d4f9e1ec55ba90b6cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardName: Jack
+  health: 100
+  attack: 10
+  speed: 100
+  weaknessesList: []
+  strengthList: []
 --- !u!1 &315830842
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 638483867}
   - component: {fileID: 638483866}
+  - component: {fileID: 638483868}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -696,6 +716,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &638483868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638483865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14b3e019dd5544c4693c7d661b64387d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardName: Enemy grr grr
+  health: 100
+  attack: 5
+  speed: 100
+  weaknessesList: []
+  strengthList: []
 --- !u!1 &737281702
 GameObject:
   m_ObjectHideFlags: 0
@@ -1083,6 +1121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a454ff14d1f058844bfb6cbf5b02561a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerCard: {fileID: 195495695}
+  _enemyCard: {fileID: 638483868}
 --- !u!1 &1750283522
 GameObject:
   m_ObjectHideFlags: 0
@@ -1095,7 +1135,7 @@ GameObject:
   - component: {fileID: 1750283525}
   - component: {fileID: 1750283524}
   m_Layer: 5
-  m_Name: MainCharacterHealth
+  m_Name: PlayerHealth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

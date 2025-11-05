@@ -4,8 +4,9 @@ using System;
 
 public class Card : MonoBehaviour
 {
+    public string cardName;
     public int health, attack, speed;
-    public List<string> weaknessesList, strenghList;
+    public List<string> weaknessesList, strengthList;
     public virtual int Attack()
     {
         return attack;
@@ -14,6 +15,6 @@ public class Card : MonoBehaviour
     public virtual int TakeDamage(int targetHealth, int damage)
     {
         targetHealth -= damage;
-        return health;
+        return targetHealth;
     }
 }

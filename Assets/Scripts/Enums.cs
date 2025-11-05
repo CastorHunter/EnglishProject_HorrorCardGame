@@ -15,6 +15,7 @@ public enum DamageType
 
 public enum State
 {
+    Normal,
     Wisdom,
     Feared,
     AbyssalEnd,
