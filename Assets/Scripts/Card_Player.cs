@@ -39,9 +39,9 @@ public class Card_Player : Card
         return _playerState;
     }
 
-    public void Fear(int fearLevel)
+    public void ApplyFear(int fearLevel)
     {
-        attack -= fearLevel*5;
+        attack -= fearLevel;
         if (attack < 0)
         {
             attack = 0;

@@ -2,18 +2,36 @@ using UnityEngine;
 
 public class Card_Scarecrow : Card
 {
-    private int _crows;
+    private int _crows, _timeBeforeFear = 2;
         
     public override int Attack()
     {
-        _crows += 1;
-        return ScaredCrows();
+        print(_timeBeforeFear);
+        if (_timeBeforeFear <= 0)
+        {
+            if (gameManagerBehavior != null)
+            {
+                gameManagerBehavior._playerCard.ApplyFear(_crows);
+                _timeBeforeFear = 2;
+            }
+            return 0;
+        }
+        else
+        {
+            _timeBeforeFear -= 1;
+            _crows += 1;
+            return ScaredCrows();
+        }
     }
 
-    public override int TakeDamage(int health, int damages)
+    public override int TakeDamage(int targetHealth, int damages)
     {
-        health -= MasterOfCrows(damages);
-        return health;
+        /*health -= MasterOfCrows(damages);*/
+        
+        //variante en attente du debug
+        targetHealth -= damages;
+        
+        return targetHealth;
     }
 
     private int MasterOfCrows(int damages)

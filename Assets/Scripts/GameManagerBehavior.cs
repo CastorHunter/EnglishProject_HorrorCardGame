@@ -5,8 +5,8 @@ using TMPro;
 public class GameManagerBehavior : MonoBehaviour
 {
     private bool _isPlayerTurn = false;
-    [SerializeField]
-    private Card _playerCard, _enemyCard;
+    public Card_Player _playerCard;
+    public Card _enemyCard;
     private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina;
     private string _winner;
     [SerializeField]
@@ -14,14 +14,16 @@ public class GameManagerBehavior : MonoBehaviour
 
     void Start()
     {
-        //Set player health, speed and image
+        //Set player health, speed and image, and reference itself
         _currentPlayerHealth = _playerCard.health;
         _currentPlayerStamina = _playerCard.speed;
         _playerCard.GetComponent<SpriteRenderer>().sprite = _playerCard.cardImage;
-        //Set enemy health, speed and image
+        _playerCard.gameManagerBehavior = this;
+        //Set enemy health, speed and image, and reference itself
         _currentEnemyHealth = _enemyCard.health;
         _currentEnemyStamina = _enemyCard.speed;
         _enemyCard.GetComponent<SpriteRenderer>().sprite = _enemyCard.cardImage;
+        _enemyCard.gameManagerBehavior = this;
         //Hide the result text pannel
         _fightResultText.enabled = false;
         //Start the autofight
@@ -67,13 +69,13 @@ public class GameManagerBehavior : MonoBehaviour
         if (_currentEnemyHealth <= 0)
         {
             someoneWon = true;
-            _winner = _playerCard.name;
+            _winner = _playerCard.cardName;
         }
 
         if (_currentPlayerHealth <= 0)
         {
             someoneWon = true;
-            _winner = _enemyCard.name;
+            _winner = _enemyCard.cardName;
         }
         return someoneWon;
     }
