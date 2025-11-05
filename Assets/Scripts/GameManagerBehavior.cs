@@ -14,10 +14,13 @@ public class GameManagerBehavior : MonoBehaviour
 
     void Start()
     {
+        //Set player health and speed
         _currentPlayerHealth = _playerCard.health;
-        print(_currentPlayerHealth);
+        _currentPlayerStamina = _playerCard.speed;
+        //Set enemy health and speed
         _currentEnemyHealth = _enemyCard.health;
-        print(_currentEnemyHealth);
+        _currentEnemyStamina = _enemyCard.speed;
+        //Start the autofight
         StartCoroutine(AutoFight());
         _playerCard.GetComponent<SpriteRenderer>().sprite = _playerCard.cardImage;
         _enemyCard.GetComponent<SpriteRenderer>().sprite = _enemyCard.cardImage;
@@ -39,6 +42,20 @@ public class GameManagerBehavior : MonoBehaviour
                 ChangeHealthText(_playerHealthText, _currentPlayerHealth);
                 break;
             }
+        }
+    }
+
+    private void CheckWhoHasToPlay()
+    {
+        if (_currentPlayerStamina >= _currentEnemyStamina)
+        {
+            _isPlayerTurn = true;
+            _currentEnemyStamina += _enemyCard.speed;
+        }
+        else
+        {
+            _isPlayerTurn = false;
+            _currentPlayerStamina += _playerCard.speed;
         }
     }
 
@@ -65,7 +82,7 @@ public class GameManagerBehavior : MonoBehaviour
     private IEnumerator AutoFight()
     {
         yield return new WaitForSeconds(1);
-        _isPlayerTurn = !_isPlayerTurn;
+        CheckWhoHasToPlay();
         PlayTurn();
         if (CheckIfSomeoneWon())
         {
