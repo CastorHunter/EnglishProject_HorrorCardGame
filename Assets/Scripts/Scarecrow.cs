@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Card_Scarecrow : Card
+public class Scarecrow : Entity
 {
     private int _crows, _timeBeforeFear = 2;
         
@@ -11,7 +11,7 @@ public class Card_Scarecrow : Card
         {
             if (gameManagerBehavior != null)
             {
-                gameManagerBehavior._playerCard.ApplyFear(_crows);
+                gameManagerBehavior.player.ApplyFear(_crows);
                 _timeBeforeFear = 2;
             }
             return 0;

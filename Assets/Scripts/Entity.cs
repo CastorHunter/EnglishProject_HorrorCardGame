@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Card : MonoBehaviour
+public class Entity : MonoBehaviour
 {
     public string cardName;
     public int health, attack, speed;

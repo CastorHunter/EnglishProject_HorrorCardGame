@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class Card_Player : Card
+public class Player : Entity
 {
     private State _playerState;
     private int _baseSpeed, _baseAttack;
@@ -16,8 +16,8 @@ public class Card_Player : Card
     {
         if (_playerState == State.Surprised)
         {
-            return 0;
             SetState(State.Normal);
+            return 0;
         }
         return attack;
     }
@@ -58,6 +58,7 @@ public class Card_Player : Card
     {
         SetState(State.Normal);
         attack = _baseAttack;
+        speed = _baseSpeed;
     }
 }
 

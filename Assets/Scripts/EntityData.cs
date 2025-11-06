@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "CardData", menuName = "Data/CardData")]
-public class CardData : ScriptableObject
+public class EntityData : ScriptableObject
 {
     public int health, attack, speed;
     public List<string> weaknessesList, strenghList;
-    public Card cardOrigin;
+    [FormerlySerializedAs("cardOrigin")] public Entity entityOrigin;
 }

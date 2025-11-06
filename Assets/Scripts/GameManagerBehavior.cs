@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.Serialization;
 
 public class GameManagerBehavior : MonoBehaviour
 {
     private bool _isPlayerTurn = false;
-    public Card_Player _playerCard;
-    public Card _enemyCard;
+    public Player player;
+    public Entity enemyEntity;
     private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina;
     private string _winner;
     [SerializeField]
@@ -15,15 +16,15 @@ public class GameManagerBehavior : MonoBehaviour
     void Start()
     {
         //Set player health, speed and image, and reference itself
-        _currentPlayerHealth = _playerCard.health;
-        _currentPlayerStamina = _playerCard.speed;
-        _playerCard.GetComponent<SpriteRenderer>().sprite = _playerCard.cardImage;
-        _playerCard.gameManagerBehavior = this;
+        _currentPlayerHealth = player.health;
+        _currentPlayerStamina = player.speed;
+        player.GetComponent<SpriteRenderer>().sprite = player.cardImage;
+        player.gameManagerBehavior = this;
         //Set enemy health, speed and image, and reference itself
-        _currentEnemyHealth = _enemyCard.health;
-        _currentEnemyStamina = _enemyCard.speed;
-        _enemyCard.GetComponent<SpriteRenderer>().sprite = _enemyCard.cardImage;
-        _enemyCard.gameManagerBehavior = this;
+        _currentEnemyHealth = enemyEntity.health;
+        _currentEnemyStamina = enemyEntity.speed;
+        enemyEntity.GetComponent<SpriteRenderer>().sprite = enemyEntity.cardImage;
+        enemyEntity.gameManagerBehavior = this;
         //Hide the result text pannel
         _fightResultText.enabled = false;
         //Start the autofight
@@ -37,13 +38,13 @@ public class GameManagerBehavior : MonoBehaviour
         {
             case true:
             {
-                _currentEnemyHealth=_enemyCard.TakeDamage(_currentEnemyHealth, _playerCard.Attack());
+                _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
                 ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
                 break;
             }
             case false:
             {
-                _currentPlayerHealth=_playerCard.TakeDamage(_currentPlayerHealth, _enemyCard.Attack());
+                _currentPlayerHealth=player.TakeDamage(_currentPlayerHealth, enemyEntity.Attack());
                 ChangeHealthText(_playerHealthText, _currentPlayerHealth);
                 break;
             }
@@ -55,12 +56,12 @@ public class GameManagerBehavior : MonoBehaviour
         if (_currentPlayerStamina >= _currentEnemyStamina)
         {
             _isPlayerTurn = true;
-            _currentEnemyStamina += _enemyCard.speed;
+            _currentEnemyStamina += enemyEntity.speed;
         }
         else
         {
             _isPlayerTurn = false;
-            _currentPlayerStamina += _playerCard.speed;
+            _currentPlayerStamina += player.speed;
         }
     }
 
@@ -69,13 +70,13 @@ public class GameManagerBehavior : MonoBehaviour
         if (_currentEnemyHealth <= 0)
         {
             someoneWon = true;
-            _winner = _playerCard.cardName;
+            _winner = player.cardName;
         }
 
         if (_currentPlayerHealth <= 0)
         {
             someoneWon = true;
-            _winner = _enemyCard.cardName;
+            _winner = enemyEntity.cardName;
         }
         return someoneWon;
     }
@@ -107,16 +108,16 @@ public class GameManagerBehavior : MonoBehaviour
         {
             case true:
             {
-                _playerCard.gameObject.transform.position = new Vector3(_playerCard.gameObject.transform.position.x+5, _playerCard.gameObject.transform.position.y, _playerCard.gameObject.transform.position.z);
+                player.gameObject.transform.position = new Vector3(player.gameObject.transform.position.x+5, player.gameObject.transform.position.y, player.gameObject.transform.position.z);
                 yield return new WaitForSeconds(0.2f);
-                _playerCard.gameObject.transform.position = new Vector3(_playerCard.gameObject.transform.position.x-5, _playerCard.gameObject.transform.position.y, _playerCard.gameObject.transform.position.z);
+                player.gameObject.transform.position = new Vector3(player.gameObject.transform.position.x-5, player.gameObject.transform.position.y, player.gameObject.transform.position.z);
                 break;
             }
             case false:
             {
-                _enemyCard.gameObject.transform.position = new Vector3(_enemyCard.gameObject.transform.position.x-5, _enemyCard.gameObject.transform.position.y, _enemyCard.gameObject.transform.position.z);
+                enemyEntity.gameObject.transform.position = new Vector3(enemyEntity.gameObject.transform.position.x-5, enemyEntity.gameObject.transform.position.y, enemyEntity.gameObject.transform.position.z);
                 yield return new WaitForSeconds(0.2f);
-                _enemyCard.gameObject.transform.position = new Vector3(_enemyCard.gameObject.transform.position.x+5, _enemyCard.gameObject.transform.position.y, _enemyCard.gameObject.transform.position.z);
+                enemyEntity.gameObject.transform.position = new Vector3(enemyEntity.gameObject.transform.position.x+5, enemyEntity.gameObject.transform.position.y, enemyEntity.gameObject.transform.position.z);
                 break;
             }
         }
