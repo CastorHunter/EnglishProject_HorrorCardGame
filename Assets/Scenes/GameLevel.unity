@@ -978,9 +978,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardName: Scarecrow grr grr
-  health: 100
-  attack: 0
-  speed: 150
+  health: 50
+  attack: 2
+  speed: 100
   weaknessesList: []
   strengthList: []
   cardImage: {fileID: 21300000, guid: 2b8c394cef47ab048b92a0276812d281, type: 3}

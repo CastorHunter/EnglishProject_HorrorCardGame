@@ -52,6 +52,7 @@ public class Player : Entity
             speed = 0;
         }
         SetState(State.Feared);
+        print("Player is Feared, damages and speed reduced");
     }
 
     public void ClearState()

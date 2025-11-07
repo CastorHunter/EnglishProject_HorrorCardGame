@@ -20,11 +20,13 @@ public class GameManagerBehavior : MonoBehaviour
         _currentPlayerStamina = player.speed;
         player.GetComponent<SpriteRenderer>().sprite = player.cardImage;
         player.gameManagerBehavior = this;
+        ChangeHealthText(_playerHealthText, _currentPlayerHealth);
         //Set enemy health, speed and image, and reference itself
         _currentEnemyHealth = enemyEntity.health;
         _currentEnemyStamina = enemyEntity.speed;
         enemyEntity.GetComponent<SpriteRenderer>().sprite = enemyEntity.cardImage;
         enemyEntity.gameManagerBehavior = this;
+        ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
         //Hide the result text pannel
         _fightResultText.enabled = false;
         //Start the autofight

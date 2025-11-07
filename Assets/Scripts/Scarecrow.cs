@@ -39,6 +39,7 @@ public class Scarecrow : Entity
                 {
                     shieldCrows = (i+1);
                     _crows -= (i+1);
+                    print("The Scarecrow sacrificed " + shieldCrows + " crow(s) to prevent from death !");
                     return damages - shieldCrows*2;
                 }
             }
