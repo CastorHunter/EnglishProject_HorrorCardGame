@@ -6,7 +6,6 @@ public class Scarecrow : Entity
         
     public override int Attack()
     {
-        print(_timeBeforeFear);
         if (_timeBeforeFear <= 0)
         {
             if (gameManagerBehavior != null)
@@ -26,21 +25,22 @@ public class Scarecrow : Entity
 
     public override int TakeDamage(int targetHealth, int damages)
     {
-        /*health -= MasterOfCrows(damages);*/
-        
-        //variante en attente du debug
-        targetHealth -= damages;
-        
+        targetHealth -= MasterOfCrows(damages, targetHealth);
         return targetHealth;
     }
 
-    private int MasterOfCrows(int damages)
+    private int MasterOfCrows(int damages, int healthToCompare, int shieldCrows = 0)
     {
-        for (int i = 0; i < _crows; i++)
+        if (healthToCompare <= damages)
         {
-            if (i == _crows - 1)
+            for (int i = 0; i < _crows; i++)
             {
-                return _crows;
+                if (healthToCompare+2*i >= damages)
+                {
+                    shieldCrows = (i+1);
+                    _crows -= (i+1);
+                    return damages - shieldCrows*2;
+                }
             }
         }
         return damages;

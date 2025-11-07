@@ -979,7 +979,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Scarecrow grr grr
   health: 100
-  attack: 5
+  attack: 0
   speed: 150
   weaknessesList: []
   strengthList: []
