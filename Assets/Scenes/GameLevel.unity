@@ -201,7 +201,7 @@ Transform:
   m_GameObject: {fileID: 120659804}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 34.46, y: 5.43, z: 0}
+  m_LocalPosition: {x: 33.21, y: 7.62, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -633,7 +633,7 @@ Transform:
   m_GameObject: {fileID: 317641227}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.67, y: -0.05, z: 0}
+  m_LocalPosition: {x: 32.41, y: 12.62, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1067,7 +1067,7 @@ Transform:
   m_GameObject: {fileID: 638483865}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 31.32, y: -1.46, z: 0}
+  m_LocalPosition: {x: 15.02, y: -0.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1382,7 +1382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 195495695}
-  enemyEntity: {fileID: 317641231}
+  enemyEntity: {fileID: 638483869}
   _playerHealthText: {fileID: 1750283524}
   _enemyHealthText: {fileID: 737281704}
   _fightResultText: {fileID: 171265974}

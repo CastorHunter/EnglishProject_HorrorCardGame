@@ -8,10 +8,11 @@ public class GameManagerBehavior : MonoBehaviour
     private bool _isPlayerTurn = false;
     public Player player;
     public Entity enemyEntity;
-    private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina;
+    private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina, _abyssalEndCountDown;
     private string _winner;
     [SerializeField]
     private TextMeshProUGUI _playerHealthText, _enemyHealthText, _fightResultText;
+    private Coroutine _AutoFightCoroutine;
 
     void Start()
     {
@@ -30,10 +31,10 @@ public class GameManagerBehavior : MonoBehaviour
         //Hide the result text pannel
         _fightResultText.enabled = false;
         //Start the autofight
-        StartCoroutine(AutoFight());
+        _AutoFightCoroutine = StartCoroutine(AutoFight());
     }
     
-    private void PlayTurn()
+    private void PlayTurn() //Play a turn after checking who has to play
     {
         StartCoroutine(AttackAnimation());
         switch (_isPlayerTurn)
@@ -42,6 +43,7 @@ public class GameManagerBehavior : MonoBehaviour
             {
                 _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
                 ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
+                ApplyStates();
                 break;
             }
             case false:
@@ -53,7 +55,7 @@ public class GameManagerBehavior : MonoBehaviour
         }
     }
 
-    private void CheckWhoHasToPlay()
+    private void CheckWhoHasToPlay() //Check who has to play according to current stamina
     {
         if (_currentPlayerStamina >= _currentEnemyStamina)
         {
@@ -67,25 +69,42 @@ public class GameManagerBehavior : MonoBehaviour
         }
     }
 
-    private bool CheckIfSomeoneWon(bool someoneWon = false)
+    private void CheckIfSomeoneWon() //End the game if someone won
     {
         if (_currentEnemyHealth <= 0)
         {
-            someoneWon = true;
-            _winner = player.cardName;
+            EndGame(player);
         }
 
         if (_currentPlayerHealth <= 0)
         {
-            someoneWon = true;
-            _winner = enemyEntity.cardName;
+            EndGame(enemyEntity);
         }
-        return someoneWon;
     }
 
     private void ChangeHealthText(TextMeshProUGUI textToChange, int newHealth)
     {
         textToChange.text = ("Health : " + newHealth.ToString());
+    }
+
+    private void ApplyStates() //Apply states on the player
+    {
+        print("Apply States effects");
+        if (player.GetStates().Contains(State.AbyssalEnd))
+        {
+            _abyssalEndCountDown+=1;
+            if (_abyssalEndCountDown >= 5)
+            {
+                EndGame(enemyEntity);
+            }
+        }
+    }
+
+    private void EndGame(Entity entity) //Select a winner to end the game
+    {
+        _winner = entity.cardName;
+        _fightResultText.text = (_winner + " won");
+        _fightResultText.enabled = true;
     }
     
     private IEnumerator AutoFight()
@@ -93,14 +112,10 @@ public class GameManagerBehavior : MonoBehaviour
         yield return new WaitForSeconds(1);
         CheckWhoHasToPlay();
         PlayTurn();
-        if (CheckIfSomeoneWon())
+        CheckIfSomeoneWon();
+        if (_winner == null)
         {
-            _fightResultText.text = (_winner + " won");
-            _fightResultText.enabled = true;
-        }
-        else
-        {
-            StartCoroutine(AutoFight());
+            _AutoFightCoroutine = StartCoroutine(AutoFight());
         }
     }
 

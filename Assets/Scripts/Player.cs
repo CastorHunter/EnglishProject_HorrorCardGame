@@ -34,6 +34,10 @@ public class Player : Entity
         if (_playerStates.Contains(newState) != true)
         {
             _playerStates.Add(newState);
+            if (_playerStates.Contains(State.Normal) && newState != State.Normal)
+            {
+                RemoveState(State.Normal);
+            }
             SetPlayerStatesText();
         }
     }
