@@ -5,9 +5,9 @@ public class Mermaid : Entity
     private int _turnsBeforeWisdom = 2;
     public override int Attack()
     {
-        if (gameManagerBehavior.player.GetState() != State.AbyssalEnd)
+        if (gameManagerBehavior.player.GetStates().Contains(State.AbyssalEnd) != true)
         {
-            gameManagerBehavior.player.SetState(State.AbyssalEnd);
+            gameManagerBehavior.player.AddState(State.AbyssalEnd);
         }
         else
         {

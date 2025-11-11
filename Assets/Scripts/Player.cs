@@ -1,22 +1,23 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class Player : Entity
 {
-    private State _playerState;
+    private List<State> _playerStates;
     private int _baseSpeed, _baseAttack;
     [SerializeField]
-    private TextMeshProUGUI _playerStateText;
+    private TextMeshProUGUI _playerStatesText;
 
     private void Start()
     {
-        SetState(State.Normal);
+        AddState(State.Normal);
     }
     public override int Attack()
     {
-        if (_playerState == State.Surprised)
+        if (_playerStates.Contains(State.Surprised))
         {
-            SetState(State.Normal);
+            RemoveState(State.Surprised);
             return 0;
         }
         return attack;
@@ -28,15 +29,24 @@ public class Player : Entity
         return currentHealth;
     }
 
-    public void SetState(State newState)
+    public void AddState(State newState)
     {
-        _playerState = newState;
-        _playerStateText.text = ("State : " + _playerState.ToString());
+        _playerStates.Add(newState);
+        _playerStatesText.text = ("State : " + _playerStates.ToString());
     }
 
-    public State GetState()
+    public void RemoveState(State newState)
     {
-        return _playerState;
+        if (_playerStates.Contains(newState))
+        {
+            _playerStates.Remove(newState);
+        }
+        _playerStatesText.text = ("State : " + _playerStates.ToString());
+    }
+
+    public List<State> GetStates()
+    {
+        return _playerStates;
     }
 
     public void ApplyFear(int fearLevel)
@@ -51,15 +61,17 @@ public class Player : Entity
         {
             speed = 0;
         }
-        SetState(State.Feared);
+        AddState(State.Feared);
         print("Player is Feared, damages and speed reduced");
     }
 
-    public void ClearState()
+    public void ClearStates()
     {
-        SetState(State.Normal);
+        _playerStates.Clear();
+        AddState(State.Normal);
         attack = _baseAttack;
         speed = _baseSpeed;
+        _playerStatesText.text = ("State : " + _playerStates.ToString());
     }
 }
 
