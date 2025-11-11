@@ -20,5 +20,6 @@ public enum State
     Feared,
     AbyssalEnd,
     Surprised,
-    Empathetic
+    Empathetic,
+    Poisoned
 }
