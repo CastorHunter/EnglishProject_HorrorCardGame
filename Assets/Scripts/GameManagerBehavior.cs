@@ -7,30 +7,59 @@ public class GameManagerBehavior : MonoBehaviour
 {
     private bool _isPlayerTurn = false;
     public Player player;
+    public GameObject enemy;
     public Entity enemyEntity;
     private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina, _abyssalEndCountDown;
     private string _winner;
     [SerializeField]
     private TextMeshProUGUI _playerHealthText, _enemyHealthText, _fightResultText;
     private Coroutine _AutoFightCoroutine;
+    [SerializeField]
+    private GameObject _travelMap, _playerposition, _enemyPosition;
 
     void Start()
     {
+        //Hide the result text pannel
+        _fightResultText.enabled = false;
+        _playerHealthText.enabled = false;
+        _enemyHealthText.enabled = false;
+        player._playerStatesText.enabled = false;
+    }
+
+    public void StartFighting(int scriptedFightLevel) //Start the autofight
+    {
+        _travelMap.SetActive(false);
+        switch (scriptedFightLevel)
+        {
+            case 1:
+                enemyEntity = enemy.GetComponent<Scarecrow>();
+                break;
+            case 2:
+                enemyEntity = enemy.GetComponent<Mermaid>();
+                break;
+            case 3:
+                enemyEntity = enemy.GetComponent<Krasue>();
+                break;
+        }
+        player.gameObject.transform.position = _playerposition.transform.position;
+        enemyEntity.gameObject.transform.position = _enemyPosition.transform.position;
+        _playerHealthText.enabled = true;
+        _enemyHealthText.enabled = true;
+        player._playerStatesText.enabled = true;
+        
         //Set player health, speed and image, and reference itself
         _currentPlayerHealth = player.health;
         _currentPlayerStamina = player.speed;
         player.GetComponent<SpriteRenderer>().sprite = player.cardImage;
         player.gameManagerBehavior = this;
         ChangeHealthText(_playerHealthText, _currentPlayerHealth);
+        
         //Set enemy health, speed and image, and reference itself
         _currentEnemyHealth = enemyEntity.health;
         _currentEnemyStamina = enemyEntity.speed;
         enemyEntity.GetComponent<SpriteRenderer>().sprite = enemyEntity.cardImage;
         enemyEntity.gameManagerBehavior = this;
         ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
-        //Hide the result text pannel
-        _fightResultText.enabled = false;
-        //Start the autofight
         _AutoFightCoroutine = StartCoroutine(AutoFight());
     }
     

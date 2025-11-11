@@ -6,8 +6,7 @@ public class Player : Entity
 {
     private List<State> _playerStates = new List<State>();
     private int _baseSpeed, _baseAttack;
-    [SerializeField]
-    private TextMeshProUGUI _playerStatesText;
+    public TextMeshProUGUI _playerStatesText;
 
     private void Start()
     {
