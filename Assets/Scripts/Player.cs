@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Player : Entity
 {
-    private List<State> _playerStates;
+    private List<State> _playerStates = new List<State>();
     private int _baseSpeed, _baseAttack;
     [SerializeField]
     private TextMeshProUGUI _playerStatesText;
@@ -31,8 +31,11 @@ public class Player : Entity
 
     public void AddState(State newState)
     {
-        _playerStates.Add(newState);
-        _playerStatesText.text = ("State : " + _playerStates.ToString());
+        if (_playerStates.Contains(newState) != true)
+        {
+            _playerStates.Add(newState);
+            SetPlayerStatesText();
+        }
     }
 
     public void RemoveState(State newState)
@@ -41,7 +44,7 @@ public class Player : Entity
         {
             _playerStates.Remove(newState);
         }
-        _playerStatesText.text = ("State : " + _playerStates.ToString());
+        SetPlayerStatesText();
     }
 
     public List<State> GetStates()
@@ -71,7 +74,16 @@ public class Player : Entity
         AddState(State.Normal);
         attack = _baseAttack;
         speed = _baseSpeed;
-        _playerStatesText.text = ("State : " + _playerStates.ToString());
+        SetPlayerStatesText();
+    }
+
+    private void SetPlayerStatesText()
+    {
+        _playerStatesText.text = ("State : ");
+        foreach (var state in _playerStates)
+        {
+            _playerStatesText.text += state.ToString();
+        }
     }
 }
 
