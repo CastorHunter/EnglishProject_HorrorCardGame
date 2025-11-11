@@ -9,7 +9,7 @@ public class GameManagerBehavior : MonoBehaviour
     public Player player;
     public GameObject enemy;
     public Entity enemyEntity;
-    private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina, _abyssalEndCountDown;
+    private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina, _abyssalEndCountDown, _enemyLevel, _playerLevel;
     private string _winner;
     [SerializeField]
     private TextMeshProUGUI _playerHealthText, _enemyHealthText, _fightResultText;
@@ -33,12 +33,15 @@ public class GameManagerBehavior : MonoBehaviour
         {
             case 1:
                 enemyEntity = enemy.GetComponent<Scarecrow>();
+                _enemyLevel = 1;
                 break;
             case 2:
                 enemyEntity = enemy.GetComponent<Mermaid>();
+                _enemyLevel = 1;
                 break;
             case 3:
                 enemyEntity = enemy.GetComponent<Krasue>();
+                _enemyLevel = 1;
                 break;
         }
         player.gameObject.transform.position = _playerposition.transform.position;
@@ -48,15 +51,15 @@ public class GameManagerBehavior : MonoBehaviour
         player._playerStatesText.enabled = true;
         
         //Set player health, speed and image, and reference itself
-        _currentPlayerHealth = player.health;
-        _currentPlayerStamina = player.speed;
+        _currentPlayerHealth = player.health*_playerLevel;
+        _currentPlayerStamina = player.speed*_playerLevel;
         player.GetComponent<SpriteRenderer>().sprite = player.cardImage;
         player.gameManagerBehavior = this;
         ChangeHealthText(_playerHealthText, _currentPlayerHealth);
         
         //Set enemy health, speed and image, and reference itself
-        _currentEnemyHealth = enemyEntity.health;
-        _currentEnemyStamina = enemyEntity.speed;
+        _currentEnemyHealth = enemyEntity.health*_enemyLevel;
+        _currentEnemyStamina = enemyEntity.speed*_enemyLevel;
         enemyEntity.GetComponent<SpriteRenderer>().sprite = enemyEntity.cardImage;
         enemyEntity.gameManagerBehavior = this;
         ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
