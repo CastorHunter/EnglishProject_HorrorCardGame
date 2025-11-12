@@ -9,7 +9,7 @@ public class GameManagerBehavior : MonoBehaviour
     public Player player;
     public GameObject enemy;
     public Entity enemyEntity;
-    private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina, _abyssalEndCountDown, _enemyLevel, _playerLevel;
+    private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina, _abyssalEndCountDown, _enemyLevel = 1, _playerLevel = 1;
     private string _winner;
     [SerializeField]
     private TextMeshProUGUI _playerHealthText, _enemyHealthText, _fightResultText;
