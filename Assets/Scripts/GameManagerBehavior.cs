@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class GameManagerBehavior : MonoBehaviour
 {
@@ -10,15 +11,18 @@ public class GameManagerBehavior : MonoBehaviour
     public Player player;
     public GameObject enemy;
     public Entity enemyEntity;
-    private int _currentPlayerHealth, _currentEnemyHealth, _currentPlayerStamina, _currentEnemyStamina, _abyssalEndCountDown, _enemyLevel = 1, _playerLevel = 1;
+    private int _enemyLevel = 1, _playerLevel = 1;
+    public int currentPlayerHealth, currentEnemyHealth, currentPlayerStamina, currentEnemyStamina, abyssalEndCountDown;
     private string _winner;
     [SerializeField]
     private TextMeshProUGUI _playerHealthText, _enemyHealthText, _fightResultText;
-    private Coroutine _AutoFightCoroutine;
+    private Coroutine _autoFightCoroutine;
     [SerializeField]
     private GameObject _travelMap, _playerposition, _enemyPosition;
     [SerializeField]
     private Button _card1, _card2, _card3;
+    [SerializeField]
+    private List<Card> _deck = new List<Card>();
 
     void Start()
     {
@@ -28,11 +32,14 @@ public class GameManagerBehavior : MonoBehaviour
         _enemyHealthText.enabled = false;
         player._playerStatesText.enabled = false;
         
-        //Hides the cards and disable them
+        //Change the texts of the cards and disable them
         CanNotPlayACard();
         _card1.gameObject.SetActive(false);
         _card2.gameObject.SetActive(false);
         _card3.gameObject.SetActive(false);
+        _card1.GetComponentInChildren<TextMeshProUGUI>().text = _deck[0].name;
+        _card2.GetComponentInChildren<TextMeshProUGUI>().text = _deck[1].name;
+        _card3.GetComponentInChildren<TextMeshProUGUI>().text = _deck[2].name;
     }
 
     public void StartFighting(int scriptedFightLevel) //Start the autofight
@@ -56,6 +63,11 @@ public class GameManagerBehavior : MonoBehaviour
                 _enemyLevel = 1;
                 break;
         }
+
+        player.gameManagerBehavior = this;
+        _winner = null;
+        player.ClearStates();
+        
         player.gameObject.transform.position = _playerposition.transform.position;
         enemyEntity.gameObject.transform.position = _enemyPosition.transform.position;
         _playerHealthText.enabled = true;
@@ -63,19 +75,18 @@ public class GameManagerBehavior : MonoBehaviour
         player._playerStatesText.enabled = true;
         
         //Set player health, speed and image, and reference itself
-        _currentPlayerHealth = player.health*_playerLevel;
-        _currentPlayerStamina = player.speed*_playerLevel;
+        currentPlayerHealth = player.health*_playerLevel;
+        currentPlayerStamina = player.speed*_playerLevel;
         player.GetComponent<SpriteRenderer>().sprite = player.cardImage;
-        player.gameManagerBehavior = this;
-        ChangeHealthText(_playerHealthText, _currentPlayerHealth);
+        ChangeHealthText(_playerHealthText, currentPlayerHealth);
         
         //Set enemy health, speed and image, and reference itself
-        _currentEnemyHealth = enemyEntity.health*_enemyLevel;
-        _currentEnemyStamina = enemyEntity.speed*_enemyLevel;
+        currentEnemyHealth = enemyEntity.health*_enemyLevel;
+        currentEnemyStamina = enemyEntity.speed*_enemyLevel;
         enemyEntity.GetComponent<SpriteRenderer>().sprite = enemyEntity.cardImage;
         enemyEntity.gameManagerBehavior = this;
-        ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
-        _AutoFightCoroutine = StartCoroutine(AutoFight());
+        ChangeHealthText(_enemyHealthText, currentEnemyHealth);
+        _autoFightCoroutine = StartCoroutine(AutoFight());
     }
     
     private void PlayTurn() //Play a turn after checking who has to play
@@ -87,8 +98,8 @@ public class GameManagerBehavior : MonoBehaviour
                 if (_autoFightOn)
                 {
                     StartCoroutine(AttackAnimation());
-                    _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
-                    ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
+                    currentEnemyHealth=enemyEntity.TakeDamage(currentEnemyHealth, player.Attack());
+                    ChangeHealthText(_enemyHealthText, currentEnemyHealth);
                     ApplyStates();
                 }
                 else
@@ -100,12 +111,12 @@ public class GameManagerBehavior : MonoBehaviour
             case false:
             {
                 StartCoroutine(AttackAnimation());
-                _currentPlayerHealth=player.TakeDamage(_currentPlayerHealth, enemyEntity.Attack());
-                ChangeHealthText(_playerHealthText, _currentPlayerHealth);
+                currentPlayerHealth=player.TakeDamage(currentPlayerHealth, enemyEntity.Attack());
+                ChangeHealthText(_playerHealthText, currentPlayerHealth);
                 CheckIfSomeoneWon();
                 if (_winner == null)
                 {
-                    _AutoFightCoroutine = StartCoroutine(AutoFight());
+                    _autoFightCoroutine = StartCoroutine(AutoFight());
                 }
                 break;
             }
@@ -120,28 +131,39 @@ public class GameManagerBehavior : MonoBehaviour
             switch (cardNumber)
             {
                 case 1:
-                    StartCoroutine(AttackAnimation());
-                    _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
-                    ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
+                    _deck[0].gameManagerBehavior = this;
+                    _deck[0].CardAction();
+                    DrawCards(1);
                     break;
                 case 2:
-                    StartCoroutine(AttackAnimation());
-                    _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
-                    ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
+                    _deck[1].gameManagerBehavior = this;
+                    _deck[1].CardAction();
+                    DrawCards(2);
                     break;
                 case 3:
-                    StartCoroutine(AttackAnimation());
-                    _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
-                    ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
+                    _deck[2].gameManagerBehavior = this;
+                    _deck[2].CardAction();
+                    DrawCards(3);
                     break;
             }
             ApplyStates();
+            ChangeHealthText(_enemyHealthText, currentEnemyHealth);
+            ChangeHealthText(_playerHealthText, currentPlayerHealth);
             CheckIfSomeoneWon();
             if (_winner == null)
             {
-                _AutoFightCoroutine = StartCoroutine(AutoFight());
+                _autoFightCoroutine = StartCoroutine(AutoFight());
             }
         }
+    }
+
+    private void DrawCards(int cardUsed)
+    {
+        _deck.Add(_deck[cardUsed-1]);
+        _deck.RemoveAt(cardUsed-1);
+        _card1.GetComponentInChildren<TextMeshProUGUI>().text = _deck[0].name;
+        _card2.GetComponentInChildren<TextMeshProUGUI>().text = _deck[1].name;
+        _card3.GetComponentInChildren<TextMeshProUGUI>().text = _deck[2].name;
     }
 
     private void CanPlayACard()
@@ -162,26 +184,26 @@ public class GameManagerBehavior : MonoBehaviour
 
     private void CheckWhoHasToPlay() //Check who has to play according to current stamina
     {
-        if (_currentPlayerStamina >= _currentEnemyStamina)
+        if (currentPlayerStamina >= currentEnemyStamina)
         {
             _isPlayerTurn = true;
-            _currentEnemyStamina += enemyEntity.speed;
+            currentEnemyStamina += enemyEntity.speed;
         }
         else
         {
             _isPlayerTurn = false;
-            _currentPlayerStamina += player.speed;
+            currentPlayerStamina += player.speed;
         }
     }
 
     private void CheckIfSomeoneWon() //End the game if someone won
     {
-        if (_currentEnemyHealth <= 0)
+        if (currentEnemyHealth <= 0)
         {
             EndGame(player);
         }
 
-        if (_currentPlayerHealth <= 0)
+        if (currentPlayerHealth <= 0)
         {
             EndGame(enemyEntity);
         }
@@ -197,8 +219,8 @@ public class GameManagerBehavior : MonoBehaviour
         print("Apply States effects");
         if (player.GetStates().Contains(State.AbyssalEnd))
         {
-            _abyssalEndCountDown+=1;
-            if (_abyssalEndCountDown >= 5)
+            abyssalEndCountDown+=1;
+            if (abyssalEndCountDown >= 5)
             {
                 EndGame(enemyEntity);
             }
@@ -210,6 +232,30 @@ public class GameManagerBehavior : MonoBehaviour
         _winner = entity.cardName;
         _fightResultText.text = (_winner + " won");
         _fightResultText.enabled = true;
+        StartCoroutine(LaunchMap());
+    }
+    
+    private IEnumerator LaunchMap() 
+    {
+        yield return new WaitForSeconds(3);
+        _travelMap.SetActive(true);
+        
+        //Hides the result text pannel
+        _fightResultText.enabled = false;
+        _playerHealthText.enabled = false;
+        _enemyHealthText.enabled = false;
+        player._playerStatesText.enabled = false;
+        
+        //Change the texts of the cards and disable them
+        CanNotPlayACard();
+        _card1.gameObject.SetActive(false);
+        _card2.gameObject.SetActive(false);
+        _card3.gameObject.SetActive(false);
+        _card1.GetComponentInChildren<TextMeshProUGUI>().text = _deck[0].name;
+        _card2.GetComponentInChildren<TextMeshProUGUI>().text = _deck[1].name;
+        _card3.GetComponentInChildren<TextMeshProUGUI>().text = _deck[2].name;
+        
+        
     }
     
     private IEnumerator AutoFight()
@@ -219,7 +265,7 @@ public class GameManagerBehavior : MonoBehaviour
         PlayTurn();
     }
 
-    private IEnumerator AttackAnimation()
+    public IEnumerator AttackAnimation()
     {
         switch (_isPlayerTurn)
         {

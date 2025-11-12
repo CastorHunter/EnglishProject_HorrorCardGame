@@ -2278,6 +2278,11 @@ MonoBehaviour:
   player: {fileID: 195495695}
   enemy: {fileID: 120659804}
   enemyEntity: {fileID: 0}
+  currentPlayerHealth: 0
+  currentEnemyHealth: 0
+  currentPlayerStamina: 0
+  currentEnemyStamina: 0
+  abyssalEndCountDown: 0
   _playerHealthText: {fileID: 1750283524}
   _enemyHealthText: {fileID: 737281704}
   _fightResultText: {fileID: 171265974}
@@ -2287,6 +2292,13 @@ MonoBehaviour:
   _card1: {fileID: 330454789}
   _card2: {fileID: 1144457820}
   _card3: {fileID: 361596588}
+  _deck:
+  - {fileID: 1275230994193863731, guid: 40705e0859df1be4494df4b9f5b1e8a5, type: 3}
+  - {fileID: 174982862454758582, guid: 41a9a51e445663f40a0629e813926c0c, type: 3}
+  - {fileID: 1275230994193863731, guid: 40705e0859df1be4494df4b9f5b1e8a5, type: 3}
+  - {fileID: 5516522584278742311, guid: 10f0b917e43d94249926a5c4207292cb, type: 3}
+  - {fileID: 1275230994193863731, guid: 40705e0859df1be4494df4b9f5b1e8a5, type: 3}
+  - {fileID: 5644782059682726060, guid: 2d57739cd542e864b9ad0011afbf0eac, type: 3}
 --- !u!1 &1519420865
 GameObject:
   m_ObjectHideFlags: 0

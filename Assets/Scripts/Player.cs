@@ -5,11 +5,14 @@ using System.Collections.Generic;
 public class Player : Entity
 {
     private List<State> _playerStates = new List<State>();
-    private int _baseSpeed, _baseAttack;
+    private int _baseSpeed, _baseAttack, _baseHealth;
     public TextMeshProUGUI _playerStatesText;
 
     private void Start()
     {
+        _baseAttack = attack;
+        _baseSpeed = speed;
+        _baseHealth = health;
         AddState(State.Normal);
     }
     public override int Attack()
@@ -25,6 +28,16 @@ public class Player : Entity
     public override int TakeDamage(int currentHealth, int damage)
     {
         currentHealth -= damage;
+        return currentHealth;
+    }
+    
+    public int TakeHeal(int currentHealth, int heal)
+    {
+        currentHealth += heal;
+        if (currentHealth > _baseHealth)
+        {
+            currentHealth = _baseHealth;
+        }
         return currentHealth;
     }
 
@@ -85,7 +98,7 @@ public class Player : Entity
         _playerStatesText.text = ("State : ");
         foreach (var state in _playerStates)
         {
-            _playerStatesText.text += state.ToString();
+            _playerStatesText.text += state.ToString() + " ";
         }
     }
 }
