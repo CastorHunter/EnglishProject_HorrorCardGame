@@ -2,10 +2,11 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class GameManagerBehavior : MonoBehaviour
 {
-    private bool _isPlayerTurn = false;
+    private bool _isPlayerTurn = false, _canPlayACard = false, _autoFightOn = false;
     public Player player;
     public GameObject enemy;
     public Entity enemyEntity;
@@ -16,19 +17,30 @@ public class GameManagerBehavior : MonoBehaviour
     private Coroutine _AutoFightCoroutine;
     [SerializeField]
     private GameObject _travelMap, _playerposition, _enemyPosition;
+    [SerializeField]
+    private Button _card1, _card2, _card3;
 
     void Start()
     {
-        //Hide the result text pannel
+        //Hides the result text pannel
         _fightResultText.enabled = false;
         _playerHealthText.enabled = false;
         _enemyHealthText.enabled = false;
         player._playerStatesText.enabled = false;
+        
+        //Hides the cards and disable them
+        CanNotPlayACard();
+        _card1.gameObject.SetActive(false);
+        _card2.gameObject.SetActive(false);
+        _card3.gameObject.SetActive(false);
     }
 
     public void StartFighting(int scriptedFightLevel) //Start the autofight
     {
         _travelMap.SetActive(false);
+        _card1.gameObject.SetActive(true);
+        _card2.gameObject.SetActive(true);
+        _card3.gameObject.SetActive(true);
         switch (scriptedFightLevel)
         {
             case 1:
@@ -68,23 +80,84 @@ public class GameManagerBehavior : MonoBehaviour
     
     private void PlayTurn() //Play a turn after checking who has to play
     {
-        StartCoroutine(AttackAnimation());
         switch (_isPlayerTurn)
         {
             case true:
             {
-                _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
-                ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
-                ApplyStates();
+                if (_autoFightOn)
+                {
+                    StartCoroutine(AttackAnimation());
+                    _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
+                    ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
+                    ApplyStates();
+                }
+                else
+                {
+                    CanPlayACard();
+                }
                 break;
             }
             case false:
             {
+                StartCoroutine(AttackAnimation());
                 _currentPlayerHealth=player.TakeDamage(_currentPlayerHealth, enemyEntity.Attack());
                 ChangeHealthText(_playerHealthText, _currentPlayerHealth);
+                CheckIfSomeoneWon();
+                if (_winner == null)
+                {
+                    _AutoFightCoroutine = StartCoroutine(AutoFight());
+                }
                 break;
             }
         }
+    }
+
+    public void CardPlayed(int cardNumber)
+    {
+        if(_canPlayACard && _autoFightOn == false)
+        {
+            CanNotPlayACard();
+            switch (cardNumber)
+            {
+                case 1:
+                    StartCoroutine(AttackAnimation());
+                    _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
+                    ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
+                    break;
+                case 2:
+                    StartCoroutine(AttackAnimation());
+                    _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
+                    ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
+                    break;
+                case 3:
+                    StartCoroutine(AttackAnimation());
+                    _currentEnemyHealth=enemyEntity.TakeDamage(_currentEnemyHealth, player.Attack());
+                    ChangeHealthText(_enemyHealthText, _currentEnemyHealth);
+                    break;
+            }
+            ApplyStates();
+            CheckIfSomeoneWon();
+            if (_winner == null)
+            {
+                _AutoFightCoroutine = StartCoroutine(AutoFight());
+            }
+        }
+    }
+
+    private void CanPlayACard()
+    {
+        _canPlayACard = true;
+        _card1.interactable = true;
+        _card2.interactable = true;
+        _card3.interactable = true;
+    }
+
+    private void CanNotPlayACard()
+    {
+        _canPlayACard = false;
+        _card1.interactable = false;
+        _card2.interactable = false;
+        _card3.interactable = false;
     }
 
     private void CheckWhoHasToPlay() //Check who has to play according to current stamina
@@ -144,11 +217,6 @@ public class GameManagerBehavior : MonoBehaviour
         yield return new WaitForSeconds(1);
         CheckWhoHasToPlay();
         PlayTurn();
-        CheckIfSomeoneWon();
-        if (_winner == null)
-        {
-            _AutoFightCoroutine = StartCoroutine(AutoFight());
-        }
     }
 
     private IEnumerator AttackAnimation()
