@@ -7,7 +7,10 @@ using System.Collections.Generic;
 
 public class GameManagerBehavior : MonoBehaviour
 {
-    private bool _isPlayerTurn = false, _canPlayACard = false, _autoFightOn = false;
+    //Temporary
+    public TextMeshProUGUI scarecrowCrowsDefendText;
+    
+    private bool _isPlayerTurn = false, _canPlayACard = false, _autoFightOn = false, _gameIsOver = false;
     public Player player;
     public GameObject enemy;
     public Entity enemyEntity;
@@ -40,6 +43,8 @@ public class GameManagerBehavior : MonoBehaviour
         _card1.GetComponentInChildren<TextMeshProUGUI>().text = _deck[0].name;
         _card2.GetComponentInChildren<TextMeshProUGUI>().text = _deck[1].name;
         _card3.GetComponentInChildren<TextMeshProUGUI>().text = _deck[2].name;
+        
+        scarecrowCrowsDefendText.text = "";
     }
 
     public void StartFighting(int scriptedFightLevel) //Start the autofight
@@ -86,6 +91,7 @@ public class GameManagerBehavior : MonoBehaviour
         enemyEntity.GetComponent<SpriteRenderer>().sprite = enemyEntity.cardImage;
         enemyEntity.gameManagerBehavior = this;
         ChangeHealthText(_enemyHealthText, currentEnemyHealth);
+        _gameIsOver = false;
         _autoFightCoroutine = StartCoroutine(AutoFight());
     }
     
@@ -223,12 +229,19 @@ public class GameManagerBehavior : MonoBehaviour
             if (abyssalEndCountDown >= 5)
             {
                 EndGame(enemyEntity);
+                abyssalEndCountDown = 5;
             }
+        }
+        if (player.GetStates().Contains(State.Poisoned))
+        {
+            currentPlayerHealth -= 1;
+            CheckIfSomeoneWon();
         }
     }
 
     private void EndGame(Entity entity) //Select a winner to end the game
     {
+        _gameIsOver = true;
         _winner = entity.cardName;
         _fightResultText.text = (_winner + " won");
         _fightResultText.enabled = true;
@@ -260,9 +273,12 @@ public class GameManagerBehavior : MonoBehaviour
     
     private IEnumerator AutoFight()
     {
-        yield return new WaitForSeconds(1);
-        CheckWhoHasToPlay();
-        PlayTurn();
+        if (_gameIsOver == false)
+        {
+            yield return new WaitForSeconds(1);
+            CheckWhoHasToPlay();
+            PlayTurn();
+        }
     }
 
     public IEnumerator AttackAnimation()

@@ -1,8 +1,10 @@
 using UnityEngine;
+using System.Collections;
 
 public class Scarecrow : Entity
 {
     private int _crows, _timeBeforeFear = 2;
+    private int _shieldCrowsToText;
         
     public override int Attack()
     {
@@ -39,7 +41,8 @@ public class Scarecrow : Entity
                 {
                     shieldCrows = (i+1);
                     _crows -= (i+1);
-                    print("The Scarecrow sacrificed " + shieldCrows + " crow(s) to prevent from death !");
+                    _shieldCrowsToText = shieldCrows;
+                    StartCoroutine(DefendText());
                     return damages - shieldCrows*2;
                 }
             }
@@ -50,5 +53,12 @@ public class Scarecrow : Entity
     private int ScaredCrows()
     {
         return _crows*attack;
+    }
+
+    private IEnumerator DefendText()
+    {
+        gameManagerBehavior.scarecrowCrowsDefendText.text = ("The Scarecrow sacrificed " + _shieldCrowsToText + " crow(s) to prevent from death!");
+        yield return new WaitForSeconds(3);
+        gameManagerBehavior.scarecrowCrowsDefendText.text = "";
     }
 }
